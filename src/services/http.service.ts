@@ -105,7 +105,10 @@ export class HttpService extends Service
         const promRegister = PromClient.register;
 
         res.set('Content-Type', promRegister.contentType);
-        res.end(promRegister.metrics());
+        res.end(/* TODO: JSFIX could not patch the breaking change:
+        The following functions are now async (return a promise): registry.metrics() registry.getMetricsAsJSON() registry.getMetricsAsArray() registry.getSingleMetricAsString(), metric.get()
+        Suggested fix: If your metrics server has a line like res.send(register.metrics()), you should change it to res.send(await register.metrics()).*/
+        promRegister.metrics());
 
         const collect = typeof(params.collect) != 'undefined'? +params.collect: 1;
 
